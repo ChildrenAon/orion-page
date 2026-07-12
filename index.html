@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Orion — Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0b0d;
+    --surface: #14161a;
+    --surface-2: #1b1e23;
+    --line: #262a31;
+    --text: #ecece6;
+    --text-muted: #8b8f98;
+    --accent: #c97c3d;
+    --accent-dim: #7a5230;
+    --star: #7c90a8;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background: var(--accent); color:#0a0b0d; }
+
+  a{ color:inherit; text-decoration:none; }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+
+  /* ambient starfield */
+  #stars{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+  }
+
+  .wrap{ max-width: 960px; margin: 0 auto; padding: 0 32px; position:relative; z-index:1; }
+
+  header{
+    display:flex; justify-content:space-between; align-items:center;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .logo{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:18px; letter-spacing:0.02em; }
+  .logo span{ color: var(--accent); }
+  nav{ display:flex; gap:28px; }
+  nav a{ font-family:'JetBrains Mono', monospace; font-size:13px; color: var(--text-muted); transition: color .2s; }
+  nav a:hover{ color: var(--text); }
+
+  /* HERO */
+  .hero{
+    min-height: 88vh;
+    display:flex; flex-direction:column; justify-content:center;
+    position:relative;
+  }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    margin-bottom: 20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{
+    content:''; width:6px; height:6px; border-radius:50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+  h1{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:700;
+    font-size: clamp(48px, 9vw, 104px);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  h1 .sub{
+    display:block;
+    font-size: clamp(20px, 3vw, 30px);
+    font-weight: 500;
+    color: var(--text-muted);
+    margin-top: 12px;
+    letter-spacing: 0;
+  }
+  .hero p.desc{
+    max-width: 560px;
+    color: var(--text-muted);
+    font-size: 17px;
+    margin-bottom: 36px;
+  }
+  .hero p.desc strong{ color: var(--text); font-weight:500; }
+
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size: 13px;
+    padding: 13px 22px;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+    transition: all .2s;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn.primary{
+    background: var(--accent);
+    color: #0a0b0d;
+    border-color: var(--accent);
+    font-weight:500;
+  }
+  .btn.primary:hover{ background:#dd8c4c; }
+  .btn.ghost:hover{ border-color: var(--text-muted); background: var(--surface); }
+
+  /* signature: node map (constellation as system architecture) */
+  .starmap{
+    position:absolute; right: -60px; top: 50%; transform: translateY(-50%);
+    width: 420px; height: 420px; opacity: 0.9;
+    pointer-events:none;
+  }
+  @media (max-width: 900px){ .starmap{ display:none; } }
+
+  section{ padding: 110px 0; border-bottom: 1px solid var(--line); }
+  .section-head{
+    display:flex; align-items:baseline; gap:16px; margin-bottom: 48px;
+  }
+  .section-head .num{ font-family:'JetBrains Mono', monospace; color: var(--accent-dim); font-size:14px; }
+  .section-head h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  /* about */
+  .about-grid{ display:grid; grid-template-columns: 1.4fr 1fr; gap: 60px; }
+  @media (max-width: 760px){ .about-grid{ grid-template-columns: 1fr; } }
+  .about-text p{ color: var(--text-muted); margin-bottom: 18px; font-size:16px; }
+  .about-text strong{ color: var(--text); font-weight:500; }
+  .traits{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
+  .trait{
+    display:flex; justify-content:space-between; padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    font-family:'JetBrains Mono', monospace; font-size: 13px;
+  }
+  .trait .k{ color: var(--text-muted); }
+  .trait .v{ color: var(--text); text-align:right; }
+
+  /* stack */
+  .stack-list{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border:1px solid var(--line); }
+  @media (max-width: 700px){ .stack-list{ grid-template-columns: repeat(2, 1fr); } }
+  .stack-item{
+    background: var(--bg); padding: 22px 20px;
+    font-family:'JetBrains Mono', monospace; font-size: 13px;
+    color: var(--text-muted);
+    transition: background .2s, color .2s;
+  }
+  .stack-item:hover{ background: var(--surface); color: var(--text); }
+  .stack-item .cat{ display:block; font-size:11px; color: var(--accent); margin-bottom:6px; letter-spacing:0.05em; }
+
+  /* projects */
+  .project{
+    display:grid; grid-template-columns: 200px 1fr; gap: 40px;
+    padding: 36px 0; border-bottom: 1px solid var(--line);
+  }
+  .project:last-child{ border-bottom:none; }
+  @media (max-width: 700px){ .project{ grid-template-columns: 1fr; gap:12px; } }
+  .project .period{ font-family:'JetBrains Mono', monospace; font-size:13px; color: var(--text-muted); }
+  .project h3{ font-family:'Space Grotesk', sans-serif; font-size:22px; font-weight:600; margin-bottom:10px; }
+  .project p{ color: var(--text-muted); font-size:15px; margin-bottom: 14px; max-width:560px; }
+  .tags{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size: 11px;
+    padding: 4px 10px; border:1px solid var(--line); border-radius: 20px;
+    color: var(--text-muted);
+  }
+
+  /* contact */
+  .contact{ text-align:center; padding: 130px 0; border-bottom:none; }
+  .contact h2{
+    font-family:'Space Grotesk', sans-serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight:700;
+    margin-bottom: 20px;
+  }
+  .contact p{ color: var(--text-muted); margin-bottom: 36px; }
+  .contact .cta-row{ justify-content:center; }
+
+  footer{
+    padding: 30px 0 50px;
+    text-align:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="logo">OR<span>·</span>ION</div>
+    <nav>
+      <a href="#about">about</a>
+      <a href="#stack">stack</a>
+      <a href="#contact">contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow mono">BACKEND DEVELOPER</div>
+    <h1>Orion
+      <span class="sub">권오철 — 시스템을 설계하고 단단하게 짓습니다</span>
+    </h1>
+    <p class="desc">
+      맡은 일은 <strong>빠르게, 그러나 도메인부터 검증하고 나서</strong> 짓습니다.
+      오버스펙을 경계하고, 필요한 만큼만 튼튼하게 만드는 걸 좋아합니다.
+    </p>
+    <div class="cta-row">
+      <a href="#stack" class="btn primary">스택 보기 →</a>
+      <a href="#contact" class="btn ghost">연락하기</a>
+    </div>
+
+    <svg class="starmap" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Orion belt + surrounding nodes styled as a system/architecture map -->
+      <line x1="120" y1="150" x2="180" y2="190" stroke="#3a4048" stroke-width="1"/>
+      <line x1="180" y1="190" x2="240" y2="200" stroke="#3a4048" stroke-width="1"/>
+      <line x1="180" y1="190" x2="200" y2="270" stroke="#3a4048" stroke-width="1"/>
+      <line x1="120" y1="150" x2="90" y2="230" stroke="#3a4048" stroke-width="1"/>
+      <line x1="240" y1="200" x2="300" y2="140" stroke="#3a4048" stroke-width="1"/>
+      <line x1="240" y1="200" x2="290" y2="270" stroke="#3a4048" stroke-width="1"/>
+      <line x1="200" y1="270" x2="290" y2="270" stroke="#3a4048" stroke-width="1"/>
+      <line x1="90" y1="230" x2="200" y2="270" stroke="#3a4048" stroke-width="1"/>
+
+      <circle cx="120" cy="150" r="4" fill="#7c90a8"/>
+      <circle cx="180" cy="190" r="5" fill="#c97c3d"/>
+      <circle cx="240" cy="200" r="4" fill="#7c90a8"/>
+      <circle cx="200" cy="270" r="4" fill="#7c90a8"/>
+      <circle cx="90" cy="230" r="3" fill="#4d5560"/>
+      <circle cx="300" cy="140" r="3" fill="#4d5560"/>
+      <circle cx="290" cy="270" r="3" fill="#4d5560"/>
+    </svg>
+  </section>
+
+  <section id="about">
+    <div class="section-head">
+      <span class="num mono">01</span>
+      <h2>About</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>공적인 자리에서는 차분하고 담담한 편이지만, 편한 자리에서는 잘 웃는 사람입니다. 코드 앞에서는 종종 시니컬해지기도 하지만, 그 아래엔 은근한 정이 있습니다.</p>
+        <p><strong>맡은 일은 최대한 빨리 끝내려 하는 성향</strong>이 있고, 쉬어야 할 때도 죄책감을 느낄 만큼 일에 진심입니다. 그만큼 만든 것에 대한 책임감이 큽니다.</p>
+        <p>새로운 걸 만들기 전엔 항상 먼저 묻습니다 — <strong>이게 정말 필요한 도메인인가, 오버스펙은 아닌가.</strong> 혼자보다 함께 일할 때 더 좋은 결과를 만든다고 믿습니다.</p>
+      </div>
+      <div class="traits">
+        <div class="trait"><span class="k">work_style</span><span class="v">fast, then verify domain</span></div>
+        <div class="trait"><span class="k">public_mode</span><span class="v">calm / reserved</span></div>
+        <div class="trait"><span class="k">private_mode</span><span class="v">warm / talkative</span></div>
+        <div class="trait"><span class="k">team_pref</span><span class="v">collaborative</span></div>
+        <div class="trait"><span class="k">design_bias</span><span class="v">minimal, no overspec</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="stack">
+    <div class="section-head">
+      <span class="num mono">02</span>
+      <h2>Stack</h2>
+    </div>
+    <div class="stack-list">
+      <div class="stack-item"><span class="cat">BACKEND</span>Node.js / Express</div>
+      <div class="stack-item"><span class="cat">DATABASE</span>MySQL 8.0 (mysql2)</div>
+      <div class="stack-item"><span class="cat">AUTH</span>bcrypt / express-session</div>
+      <div class="stack-item"><span class="cat">FRONTEND</span>HTML / CSS / JS (fetch API)</div>
+      <div class="stack-item"><span class="cat">INFRA</span>AWS EC2 (Ubuntu) / PM2</div>
+      <div class="stack-item"><span class="cat">COLLAB</span>Git · GitHub PR / Wiki / Issues</div>
+      <div class="stack-item"><span class="cat">TOOLING</span>Antigravity IDE (AI coding agent)</div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <h2>같이 일해볼까요?</h2>
+    <p class="mono">필요한 만큼만, 그러나 단단하게.</p>
+    <div class="cta-row">
+      <a href="mailto:your@email.com" class="btn primary">이메일 보내기 →</a>
+      <a href="https://github.com/yourid" class="btn ghost">GitHub</a>
+    </div>
+  </section>
+
+  <footer>
+    © 2026 Orion (권오철). Built with care, not overspec.
+  </footer>
+</div>
+
+<script>
+  // ambient starfield canvas
+  const canvas = document.getElementById('stars');
+  const ctx = canvas.getContext('2d');
+  let w, h, stars;
+
+  function resize(){
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    const count = Math.floor((w*h)/9000);
+    stars = Array.from({length: count}, () => ({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      r: Math.random()*1.2 + 0.2,
+      a: Math.random()*0.6 + 0.15,
+      tw: Math.random()*0.02 + 0.005,
+      dir: Math.random() > 0.5 ? 1 : -1
+    }));
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      s.a += s.tw * s.dir;
+      if(s.a > 0.75 || s.a < 0.1) s.dir *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(236,236,230,${s.a})`;
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  resize();
+  window.addEventListener('resize', resize);
+  if(!reduceMotion){ draw(); } else {
+    // static render once
+    ctx.clearRect(0,0,w,h);
+    for(const s of stars){
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(236,236,230,${s.a})`;
+      ctx.fill();
+    }
+  }
+</script>
+
+</body>
+</html>

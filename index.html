@@ -14,7 +14,7 @@
     --surface-2: #1b1e23;
     --line: #262a31;
     --text: #ecece6;
-    --text-muted: #8b8f98;
+    --text-muted: #a3a8b3;
     --accent: #c97c3d;
     --accent-dim: #7a5230;
     --star: #7c90a8;
@@ -48,7 +48,7 @@
   .logo{ font-family:'Space Grotesk', sans-serif; font-weight:600; font-size:18px; letter-spacing:0.02em; }
   .logo span{ color: var(--accent); }
   nav{ display:flex; gap:28px; }
-  nav a{ font-family:'JetBrains Mono', monospace; font-size:13px; color: var(--text-muted); transition: color .2s; }
+  nav a{ font-family:'JetBrains Mono', monospace; font-size:13px; font-weight:500; color: var(--text-muted); text-transform:capitalize; transition: color .2s; }
   nav a:hover{ color: var(--text); }
 
   /* HERO */
@@ -59,9 +59,10 @@
   }
   .eyebrow{
     font-family:'JetBrains Mono', monospace;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
     color: var(--accent);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     margin-bottom: 20px;
     display:flex; align-items:center; gap:10px;
   }
@@ -139,19 +140,19 @@
   .about-text strong{ color: var(--text); font-weight:500; }
   .traits{ display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line); }
   .trait{
-    display:flex; justify-content:space-between; padding: 16px 0;
+    display:flex; justify-content:space-between; align-items:center; padding: 18px 0;
     border-bottom: 1px solid var(--line);
-    font-family:'JetBrains Mono', monospace; font-size: 13px;
+    font-family:'JetBrains Mono', monospace; font-size: 14px; font-weight:500;
   }
-  .trait .k{ color: var(--text-muted); }
-  .trait .v{ color: var(--text); text-align:right; }
+  .trait .k{ color: var(--text); letter-spacing: 0.02em; }
+  .trait .v{ color: var(--accent); text-align:right; }
 
   /* stack */
   .stack-list{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border:1px solid var(--line); }
   @media (max-width: 700px){ .stack-list{ grid-template-columns: repeat(2, 1fr); } }
   .stack-item{
     background: var(--bg); padding: 22px 20px;
-    font-family:'JetBrains Mono', monospace; font-size: 13px;
+    font-family:'JetBrains Mono', monospace; font-size: 14px; font-weight:500;
     color: var(--text-muted);
     transition: background .2s, color .2s;
   }
@@ -170,7 +171,7 @@
   .project p{ color: var(--text-muted); font-size:15px; margin-bottom: 14px; max-width:560px; }
   .tags{ display:flex; gap:8px; flex-wrap:wrap; }
   .tag{
-    font-family:'JetBrains Mono', monospace; font-size: 11px;
+    font-family:'JetBrains Mono', monospace; font-size: 12px; font-weight:500;
     padding: 4px 10px; border:1px solid var(--line); border-radius: 20px;
     color: var(--text-muted);
   }
@@ -222,10 +223,6 @@
       맡은 일은 <strong>빠르게, 그러나 도메인부터 검증하고 나서</strong> 짓습니다.
       오버스펙을 경계하고, 필요한 만큼만 튼튼하게 만드는 걸 좋아합니다.
     </p>
-    <div class="cta-row">
-      <a href="#stack" class="btn primary">스택 보기 →</a>
-      <a href="#contact" class="btn ghost">연락하기</a>
-    </div>
 
     <svg class="starmap" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg">
       <!-- Orion belt + surrounding nodes styled as a system/architecture map -->
